@@ -1,0 +1,51 @@
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 5;
+  background-color: rgba(0, 0, 0, 0.548);
+}
+.todoedit__insert {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  border-radius: 8px;
+  border: 4px solid white;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  h2 {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    padding: 0.5rem;
+    border-bottom: 4px solid white;
+    color: white;
+  }
+  input {
+    margin: 2rem 0;
+    padding: 0.3rem;
+    border: none;
+    outline: none;
+    background-color: black;
+    color: white;
+    border-bottom: 2px solid white;
+  }
+  button {
+    cursor: pointer;
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    border: 2px solid white;
+    border-radius: 8px;
+    background-color: black;
+  }
+}
