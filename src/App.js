@@ -28,6 +28,22 @@ function App() {
     console.log('Checked Count Updated:', newCheckedCount);
   }, [todos]);
 
+  useEffect(() => {
+    const resetCheckedCountAtMidnight = () => {
+      const now = new Date();
+      if (now.getHours() === 0 && now.getMinutes() === 0) {
+        setCheckedCount(0);
+        console.log('Checked Count Reset at Midnight');
+      }
+    };
+
+    // 매 분마다 자정 체크
+    const intervalId = setInterval(resetCheckedCountAtMidnight, 60000);
+
+    // 컴포넌트가 언마운트될 때 interval 정리
+    return () => clearInterval(intervalId);
+  }, []);
+
   const onInsertToggle = useCallback(() => {
     if (selectedTodo) {
       setSelectedTodo(null);
