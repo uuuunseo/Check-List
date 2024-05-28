@@ -12,23 +12,31 @@ function App() {
 
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [insertToggle, setInsertToggle] = useState(false);
+  const [checkedCount, setCheckedCount] = useState(() => {
+    const savedTodos = localStorage.getItem('todos');
+    return savedTodos ? JSON.parse(savedTodos).filter(todo => todo.checked).length : 0;
+  });
 
   const nextId = useRef(todos.length ? Math.max(...todos.map(todo => todo.id)) + 1 : 1);
 
   useEffect(() => {
     // todos가 변경될 때마다 로컬 스토리지에 저장
     localStorage.setItem('todos', JSON.stringify(todos));
+    // checkedCount 업데이트
+    const newCheckedCount = todos.filter(todo => todo.checked).length;
+    setCheckedCount(newCheckedCount);
+    console.log('Checked Count Updated:', newCheckedCount);
   }, [todos]);
 
   const onInsertToggle = useCallback(() => {
     if (selectedTodo) {
-      setSelectedTodo((selectedTodo) => null);
+      setSelectedTodo(null);
     }
-    setInsertToggle((prev) => !prev);
+    setInsertToggle(prev => !prev);
   }, [selectedTodo]);
 
   const onChangeSelectedTodo = (todo) => {
-    setSelectedTodo((selectedTodo) => todo);
+    setSelectedTodo(todo);
   };
 
   const onInsert = useCallback((text) => {
@@ -37,34 +45,36 @@ function App() {
       text,
       checked: false,
     };
-    setTodos((todos) => todos.concat(todo)); //concat(): 인자로 주어진 배열이나 값들을 기존 배열에 합쳐서 새 배열 반환
-    nextId.current++; //nextId 1씩 더하기
+    setTodos(todos => todos.concat(todo));
+    nextId.current++;
   }, []);
 
   const onRemove = useCallback((id) => {
-    setTodos((todos) => todos.filter((todo) => todo.id !== id));
+    setTodos(todos => todos.filter(todo => todo.id !== id));
   }, []);
 
   const onUpdate = useCallback(
     (id, text) => {
       onInsertToggle();
-      setTodos((todos) =>
-        todos.map((todo) => (todo.id === id ? { ...todo, text } : todo)),
+      setTodos(todos =>
+        todos.map(todo => (todo.id === id ? { ...todo, text } : todo))
       );
     },
-    [onInsertToggle],
+    [onInsertToggle]
   );
 
   const onToggle = useCallback((id) => {
-    setTodos((todos) =>
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, checked: !todo.checked } : todo,
-      ),
-    );
+    setTodos(todos => {
+      const updatedTodos = todos.map(todo =>
+        todo.id === id ? { ...todo, checked: !todo.checked } : todo
+      );
+      console.log('Updated todos:', updatedTodos);
+      return updatedTodos;
+    });
   }, []);
 
   return (
-    <TodoTemplate>
+    <TodoTemplate checkedCount={checkedCount}>
       <ToDoInsert onInsert={onInsert} />
       <TodoList
         todos={todos}
